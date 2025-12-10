@@ -1,21 +1,18 @@
 # streamlit_app.py
 import streamlit as st
 from transformers import pipeline
-import torchaudio
-import io
 
 # Step 1: Convert audio to text (ASR) using Whisper-small
-def audio2text(audio_bytes):
+def audio2text(uploaded_file):
     # Load Whisper-small model
     asr_model = pipeline("automatic-speech-recognition", model="openai/whisper-small")
 
-    # Load audio from uploaded file
-    waveform, sample_rate = torchaudio.load(io.BytesIO(audio_bytes))
-    # Whisper expects 16kHz mono audio
-    waveform = torchaudio.functional.resample(waveform, sample_rate, 16000)
-    torchaudio.save("temp.wav", waveform, 16000)
-    result = asr_model("temp.wav")
+    # Save uploaded file to disk
+    with open("temp.wav", "wb") as f:
+        f.write(uploaded_file.read())
 
+    # Run ASR directly on file path
+    result = asr_model("temp.wav")
     return result["text"]
 
 # Step 2: Run multi‑emotion analysis on transcript
@@ -33,8 +30,8 @@ def text2emotion(text):
 
 # Streamlit UI
 def main():
-    st.title("🎙️ Audio Emotion Analyzer")
-    st.write("Upload an audio file (WAV/MP3) to transcribe and analyze emotions.")
+    st.title("🎙️ Translating User Speech into Emotional Understanding for UBTECH Robotics")
+    st.write("Upload an audio file (WAV/MP3/M4A) to transcribe and analyze emotions.")
 
     uploaded_file = st.file_uploader("Upload Audio File", type=["wav", "mp3", "m4a"])
 
@@ -43,7 +40,7 @@ def main():
 
         # Step 1: Transcribe
         with st.spinner("Transcribing audio..."):
-            text = audio2text(uploaded_file.read())
+            text = audio2text(uploaded_file)
         st.subheader("Transcript")
         st.write(text)
 
@@ -58,4 +55,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
