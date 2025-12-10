@@ -49,6 +49,7 @@ def main():
             emotions = text2emotion(text)
 
         st.subheader("Top 2 Emotion Predictions")
+        st.caption("Note: The model predicts only from 7 emotions — anger, disgust, fear, joy, neutral, sadness, surprise.")
         for emo in emotions:
             percent = emo['score'] * 100
             st.write(f"**{emo['label']}**: {percent:.2f}%")
