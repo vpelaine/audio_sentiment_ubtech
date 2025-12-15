@@ -21,7 +21,7 @@ def audio2text(uploaded_file):
 def text2emotion(text):
     emotion_model = pipeline(
         "text-classification",
-        model="bhadresh-savani/distilbert-base-uncased-emotion",
+        model="elainevp/CustomModel_dair-ai_emotion_finetuned",
         return_all_scores=True
     )
     results = emotion_model(text)[0]
