@@ -1,6 +1,3 @@
-transformers>=4.40.0
-torch
-
 # streamlit_app.py
 import streamlit as st
 from transformers import pipeline
